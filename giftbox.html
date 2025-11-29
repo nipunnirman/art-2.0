@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Box - Through My Pencil</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .giftbox-hero {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=1920') center/cover;
+            color: white;
+            text-align: center;
+        }
+
+        .giftbox-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .giftbox-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .intro-text {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .intro-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .intro-text p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .giftbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .giftbox-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .giftbox-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .giftbox-image {
+            position: relative;
+            overflow: hidden;
+            padding-top: 75%;
+        }
+
+        .giftbox-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .giftbox-card:hover .giftbox-image img {
+            transform: scale(1.1);
+        }
+
+        .giftbox-info {
+            padding: 25px;
+        }
+
+        .giftbox-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .giftbox-info .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .giftbox-info p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .includes-list {
+            background: rgba(0, 122, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .includes-list h4 {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .includes-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .includes-list li {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .includes-list li i {
+            color: var(--primary-color);
+            font-size: 0.7rem;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .customize-section {
+            background: white;
+            padding: 60px 0;
+            margin-top: 60px;
+        }
+
+        .customize-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .customize-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .customize-content p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .customize-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .option-card {
+            background: var(--bg-light);
+            padding: 30px 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .option-card:hover {
+            background: var(--gradient);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .option-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .option-card:hover i {
+            color: white;
+        }
+
+        .option-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #FF3B30;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .giftbox-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .customize-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">Through My Pencil</div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="giftbox.html" class="active">Gift Box</a></li>
+                <li><a href="price-calculator.html">Price Calculator</a></li>
+                <li><a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a></li>
+                <li><a href="#" class="login-btn" id="loginBtn">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Gift Box Hero -->
+    <section class="giftbox-hero">
+        <div>
+            <h1>Gift Box Collection</h1>
+            <p>The perfect gift, beautifully packaged</p>
+        </div>
+    </section>
+
+    <!-- Gift Box Section -->
+    <section class="giftbox-section">
+        <div class="container">
+            <div class="intro-text">
+                <h2>Create Memorable Gifts</h2>
+                <p>Combine a beautiful pencil portrait with premium gift items to create an unforgettable present. Perfect for birthdays, anniversaries, weddings, or any special occasion!</p>
+            </div>
+
+            <div class="giftbox-grid" id="giftboxGrid">
+                <!-- Gift boxes will be dynamically generated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Customize Section -->
+    <section class="customize-section">
+        <div class="container">
+            <div class="customize-content">
+                <h2>Want a Custom Gift Box?</h2>
+                <p>Mix and match to create your perfect gift combination!</p>
+
+                <div class="customize-options">
+                    <div class="option-card" onclick="window.location.href='gallery.html'" style="cursor: pointer;">
+                        <i class="fas fa-palette"></i>
+                        <h4>Portrait Size</h4>
+                        <p>A4 or A3</p>
+                    </div>
+                    <div class="option-card" onclick="window.location.href='price-calculator.html'" style="cursor: pointer;">
+                        <i class="fas fa-frame"></i>
+                        <h4>Frame Color</h4>
+                        <p>Black or White</p>
+                    </div>
+                    <div class="option-card" onclick="window.location.href='gift-items.html'" style="cursor: pointer;">
+                        <i class="fas fa-gift"></i>
+                        <h4>Gift Items</h4>
+                        <p>Choose from list</p>
+                    </div>
+                    <div class="option-card">
+                        <i class="fas fa-box"></i>
+                        <h4>Premium Packaging</h4>
+                        <p>Included</p>
+                    </div>
+                </div>
+
+                <a href="gift-items.html" class="whatsapp-btn" style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 40px; margin-top: 30px; background: var(--gradient); text-decoration: none;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Browse Individual Items</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Through My Pencil</h3>
+                    <p>Transforming memories into timeless art, one portrait at a time.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="custom-order.html">Custom Order</a></li>
+                        <li><a href="giftbox.html">Gift Box</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bdd4d3dbd2fdc9d5cfd2c8dad5d0c4cdd8d3ded4d193ded2d0">[email&#160;protected]</a></li>
+                        <li><i class="fab fa-whatsapp"></i> +1 234 567 890</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Through My Pencil. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Chat Button -->
+    <button class="chat-button" id="chatButton">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Welcome Back</h2>
+            <form id="loginForm" class="auth-form">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p class="toggle-auth">Don't have an account? <a href="#" id="showRegister">Register</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create Account</h2>
+            <form id="registerForm" class="auth-form">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email" required>
+                <input type="tel" placeholder="Phone Number" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <p class="toggle-auth">Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="script.js"></script>
+    <script>
+        // Gift Box Data
+        const giftBoxes = [
+            {
+                id: 'gb1',
+                name: 'Watch Gift Box',
+                price: 199,
+                image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=800',
+                description: 'Premium portrait with elegant watch',
+                includes: ['A4 Portrait with Frame', 'Premium Watch', 'Gift Card', 'Luxury Gift Box', 'Free Shipping'],
+                popular: true
+            },
+            {
+                id: 'gb2',
+                name: 'Chocolate Delight Box',
+                price: 129,
+                image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=800',
+                description: 'Sweet memories with gourmet chocolates',
+                includes: ['A4 Portrait with Frame', 'Gourmet Chocolates (500g)', 'Gift Card', 'Beautiful Gift Box', 'Free Shipping']
+            },
+            {
+                id: 'gb3',
+                name: 'T-Shirt Gift Box',
+                price: 149,
+                image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800',
+                description: 'Portrait with custom printed t-shirt',
+                includes: ['A4 Portrait with Frame', 'Custom Photo T-Shirt', 'Gift Card', 'Premium Packaging', 'Free Shipping']
+            },
+            {
+                id: 'gb4',
+                name: 'Mug & Portrait Box',
+                price: 119,
+                image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=800',
+                description: 'Daily reminder with custom mug',
+                includes: ['A4 Portrait with Frame', 'Custom Photo Mug', 'Gift Card', 'Gift Box', 'Free Shipping']
+            },
+            {
+                id: 'gb5',
+                name: 'Keychain Combo Box',
+                price: 109,
+                image: 'https://images.unsplash.com/photo-1592838064575-70ed626d3a0e?w=800',
+                description: 'Portable memories with keychain',
+                includes: ['A4 Portrait', 'Custom Photo Keychain', 'Gift Card', 'Gift Packaging', 'Free Shipping']
+            },
+            {
+                id: 'gb6',
+                name: 'Premium Hamper Box',
+                price: 299,
+                image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800',
+                description: 'Ultimate gift with multiple items',
+                includes: ['A3 Portrait with Frame', 'Watch', 'Chocolates', 'Mug', 'T-Shirt', 'Luxury Hamper', 'Free Shipping'],
+                popular: true
+            },
+            {
+                id: 'gb7',
+                name: 'Canvas Print Box',
+                price: 179,
+                image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800',
+                description: 'Museum-quality canvas portrait',
+                includes: ['Canvas Print Portrait', 'Wooden Frame', 'Gift Card', 'Premium Box', 'Free Shipping']
+            },
+            {
+                id: 'gb8',
+                name: 'Photo Album Box',
+                price: 159,
+                image: 'https://images.unsplash.com/photo-1516410529446-2c777cb7366d?w=800',
+                description: 'Portrait with custom photo album',
+                includes: ['A4 Portrait with Frame', 'Custom Photo Album', 'Gift Card', 'Gift Box', 'Free Shipping']
+            }
+        ];
+
+        // Generate Gift Boxes
+        const giftboxGrid = document.getElementById('giftboxGrid');
+        
+        giftBoxes.forEach(box => {
+            const giftboxCard = document.createElement('div');
+            giftboxCard.className = 'giftbox-card';
+            
+            const includesList = box.includes.map(item => 
+                `<li><i class="fas fa-check-circle"></i> ${item}</li>`
+            ).join('');
+            
+            giftboxCard.innerHTML = `
+                <div class="giftbox-image">
+                    ${box.popular ? '<div class="popular-badge">Popular</div>' : ''}
+                    <img src="${box.image}" alt="${box.name}">
+                </div>
+                <div class="giftbox-info">
+                    <h3>${box.name}</h3>
+                    <div class="price">$${box.price}</div>
+                    <p>${box.description}</p>
+                    <div class="includes-list">
+                        <h4>Includes:</h4>
+                        <ul>${includesList}</ul>
+                    </div>
+                    <button class="add-to-cart-btn" onclick='addGiftBoxToCart(${JSON.stringify(box)})'>
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+      

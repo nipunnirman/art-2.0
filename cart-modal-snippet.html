@@ -1,0 +1,44 @@
+<!-- Cart Modal - Add this before the closing </body> tag on ALL pages -->
+<div class="modal" id="cartModal">
+    <div class="modal-content">
+        <div class="cart-modal-header">
+            <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+            <span class="close" id="closeCartModal">&times;</span>
+        </div>
+        
+        <div class="cart-modal-body">
+            <div id="emptyCartMessage" class="empty-cart-message" style="display: none;">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Your cart is empty</h3>
+                <p>Add some beautiful portraits to your cart!</p>
+                <a href="gallery.html" class="continue-shopping-btn">Continue Shopping</a>
+            </div>
+            
+            <div id="cartContent">
+                <div id="cartItemsContainer">
+                    <!-- Cart items will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="cart-modal-footer">
+            <div class="cart-total-row">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="proceedToCheckout()">
+                <i class="fab fa-whatsapp"></i>
+                <span>Proceed to Checkout</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Note: The cart modal needs to be added to:
+- index.html
+- gallery.html
+- custom-order.html
+- giftbox.html
+- gift-items.html
+- price-calculator.html
+-->

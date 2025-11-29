@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Through My Pencil</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gallery-hero {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1920') center/cover;
+            color: white;
+            text-align: center;
+        }
+
+        .gallery-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .gallery-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .gallery-item {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-image {
+            position: relative;
+            overflow: hidden;
+            padding-top: 100%;
+        }
+
+        .gallery-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-image img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .view-btn {
+            padding: 10px 20px;
+            background: white;
+            color: var(--text-dark);
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-info {
+            padding: 20px;
+        }
+
+        .gallery-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .gallery-info .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .gallery-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            display: block;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 10px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            z-index: 2001;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">Through My Pencil</div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html" class="active">Gallery</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="giftbox.html">Gift Box</a></li>
+                <li><a href="price-calculator.html">Price Calculator</a></li>
+                <li><a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a></li>
+                <li><a href="#" class="login-btn" id="loginBtn">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Gallery Hero -->
+    <section class="gallery-hero">
+        <div>
+            <h1>Our Gallery</h1>
+            <p>Explore our collection of beautiful pencil portraits</p>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container">
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Gallery items will be dynamically generated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <img class="lightbox-content" id="lightboxImage">
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Through My Pencil</h3>
+                    <p>Transforming memories into timeless art, one portrait at a time.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="custom-order.html">Custom Order</a></li>
+                        <li><a href="giftbox.html">Gift Box</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@throughmypencil.com</li>
+                        <li><i class="fab fa-whatsapp"></i> +1 234 567 890</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Through My Pencil. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Chat Button -->
+    <button class="chat-button" id="chatButton">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Welcome Back</h2>
+            <form id="loginForm" class="auth-form">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p class="toggle-auth">Don't have an account? <a href="#" id="showRegister">Register</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create Account</h2>
+            <form id="registerForm" class="auth-form">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email" required>
+                <input type="tel" placeholder="Phone Number" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <p class="toggle-auth">Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Gallery Data
+        const galleryItems = [
+            { id: 1, title: "Family Portrait", price: 150, size: "A4", image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800", description: "Beautiful family portrait with 4 people" },
+            { id: 2, title: "Pet Portrait", price: 100, size: "A4", image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800", description: "Adorable dog portrait" },
+            { id: 3, title: "Couple Portrait", price: 120, size: "A3", image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800", description: "Romantic couple portrait" },
+            { id: 4, title: "Solo Portrait", price: 80, size: "A4", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800", description: "Individual portrait" },
+            { id: 5, title: "Baby Portrait", price: 90, size: "A4", image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800", description: "Sweet baby portrait" },
+            { id: 6, title: "Wedding Portrait", price: 200, size: "A3", image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800", description: "Wedding day memories" },
+            { id: 7, title: "Cat Portrait", price: 100, size: "A4", image: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=800", description: "Cute cat portrait" },
+            { id: 8, title: "Siblings Portrait", price: 140, size: "A3", image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800", description: "Portrait of siblings" },
+            { id: 9, title: "Grandparents Portrait", price: 130, size: "A4", image: "https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?w=800", description: "Elderly couple portrait" },
+            { id: 10, title: "Teen Portrait", price: 85, size: "A4", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800", description: "Teenage portrait" },
+            { id: 11, title: "Horse Portrait", price: 110, size: "A4", image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=800", description: "Majestic horse portrait" },
+            { id: 12, title: "Mother & Child", price: 125, size: "A4", image: "https://images.unsplash.com/photo-1544568100-847a948585b9?w=800", description: "Mother with child" },
+            { id: 13, title: "Business Portrait", price: 95, size: "A4", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800", description: "Professional headshot" },
+            { id: 14, title: "Best Friends", price: 145, size: "A3", image: "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=800", description: "Friends portrait" },
+            { id: 15, title: "Memorial Portrait", price: 160, size: "A3", image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800", description: "Cherished memory portrait" }
+        ];
+
+        // Generate Gallery
+        const galleryGrid = document.getElementById('galleryGrid');
+        
+        galleryItems.forEach(item => {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            galleryItem.innerHTML = `
+                <div class="gallery-image">
+                    <img src="${item.image}" alt="${item.title}">
+                    <div class="gallery-overlay">
+                        <button class="view-btn" onclick="openLightbox('${item.image}')">
+                            <i class="fas fa-expand"></i> View Full
+                        </button>
+                    </div>
+                </div>
+                <div class="gallery-info">
+                    <h3>${item.title}</h3>
+                    <div class="price">$${item.price}</div>
+                    <p>${item.description} | Size: ${item.size}</p>
+                    <button class="add-to-cart-btn" onclick='addItemToCart(${JSON.stringify(item)})'>
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+            `;
+            galleryGrid.appendChild(galleryItem);
+        });
+
+        // Lightbox Functions
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = imageSrc;
+            lightbox.style.display = 'block';
+        }
+
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightbox = document.getElementById('lightbox');
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.style.display = 'none';
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.style.display = 'none';
+            }
+        });
+
+        // Add to Cart Function
+        function addItemToCart(item) {
+            addToCart(item);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Items - Through My Pencil</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gift-items-hero {
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1920') center/cover;
+            color: white;
+            text-align: center;
+        }
+
+        .gift-items-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .gift-items-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .categories-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .item-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .item-image {
+            position: relative;
+            overflow: hidden;
+            padding-top: 100%;
+            background: #f0f0f0;
+        }
+
+        .item-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .item-card:hover .item-image img {
+            transform: scale(1.1);
+        }
+
+        .item-info {
+            padding: 20px;
+        }
+
+        .item-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .item-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .item-variations {
+            margin-bottom: 15px;
+        }
+
+        .variation-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .variation-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .variation-option {
+            padding: 6px 12px;
+            background: white;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .variation-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .variation-option.selected {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">Through My Pencil</div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="giftbox.html">Gift Box</a></li>
+                <li><a href="gift-items.html" class="active">Gift Items</a></li>
+                <li><a href="price-calculator.html">Price Calculator</a></li>
+                <li><a href="#" class="cart-icon" id="viewCartBtn"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a></li>
+                <li><a href="#" class="login-btn" id="loginBtn">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Gift Items Hero -->
+    <section class="gift-items-hero">
+        <div>
+            <h1>Individual Gift Items</h1>
+            <p>Mix and match to create your perfect gift</p>
+        </div>
+    </section>
+
+    <!-- Gift Items Section -->
+    <section class="gift-items-section">
+        <div class="container">
+            <div class="categories-nav" id="categoriesNav">
+                <button class="category-btn active" data-category="all">All Items</button>
+                <button class="category-btn" data-category="watches">Watches</button>
+                <button class="category-btn" data-category="chocolates">Chocolates</button>
+                <button class="category-btn" data-category="apparel">T-Shirts</button>
+                <button class="category-btn" data-category="mugs">Mugs</button>
+                <button class="category-btn" data-category="accessories">Accessories</button>
+            </div>
+
+            <div class="items-grid" id="itemsGrid">
+                <!-- Items will be dynamically generated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Through My Pencil</h3>
+                    <p>Transforming memories into timeless art, one portrait at a time.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="custom-order.html">Custom Order</a></li>
+                        <li><a href="giftbox.html">Gift Box</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@throughmypencil.com</li>
+                        <li><i class="fab fa-whatsapp"></i> +1 234 567 890</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Through My Pencil. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Chat Button -->
+    <button class="chat-button" id="chatButton">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Welcome Back</h2>
+            <form id="loginForm" class="auth-form">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p class="toggle-auth">Don't have an account? <a href="#" id="showRegister">Register</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create Account</h2>
+            <form id="registerForm" class="auth-form">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email" required>
+                <input type="tel" placeholder="Phone Number" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <p class="toggle-auth">Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Gift Items Data with Variations
+        const giftItems = [
+            // Watches
+            {
+                id: 'w1',
+                name: 'Classic Leather Watch',
+                category: 'watches',
+                basePrice: 89,
+                image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=600',
+                variations: {
+                    color: ['Black', 'Brown', 'Navy'],
+                    style: ['Classic', 'Modern']
+                }
+            },
+            {
+                id: 'w2',
+                name: 'Premium Steel Watch',
+                category: 'watches',
+                basePrice: 129,
+                image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600',
+                variations: {
+                    color: ['Silver', 'Gold', 'Rose Gold'],
+                    style: ['Casual', 'Formal']
+                }
+            },
+            {
+                id: 'w3',
+                name: 'Sport Watch',
+                category: 'watches',
+                basePrice: 69,
+                image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=600',
+                variations: {
+                    color: ['Black', 'Blue', 'Red'],
+                    size: ['Small', 'Large']
+                }
+            },
+            // Chocolates
+            {
+                id: 'c1',
+                name: 'Gourmet Chocolate Box',
+                category: 'chocolates',
+                basePrice: 35,
+                image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=600',
+                variations: {
+                    type: ['Dark', 'Milk', 'Mixed'],
+                    size: ['250g', '500g', '1kg']
+                }
+            },
+            {
+                id: 'c2',
+                name: 'Artisan Truffles',
+                category: 'chocolates',
+                basePrice: 45,
+                image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=600',
+                variations: {
+                    flavor: ['Classic', 'Hazelnut', 'Caramel'],
+                    size: ['12 pieces', '24 pieces']
+                }
+            },
+            {
+                id: 'c3',
+                name: 'Premium Chocolate Hamper',
+                category: 'chocolates',
+                basePrice: 65,
+                image: 'https://images.unsplash.com/photo-1511911063855-2bf39afa5b2e?w=600',
+                variations: {
+                    type: ['Assorted', 'Dark Only', 'Milk Only'],
+                    packaging: ['Standard', 'Premium']
+                }
+            },
+            // T-Shirts
+            {
+                id: 't1',
+                name: 'Custom Photo T-Shirt',
+                category: 'apparel',
+                basePrice: 29,
+                image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600',
+                variations: {
+                    color: ['White', 'Black', 'Navy', 'Gray'],
+                    size: ['S', 'M', 'L', 'XL', 'XXL']
+                }
+            },
+            {
+                id: 't2',
+                name: 'Premium Cotton T-Shirt',
+                category: 'apparel',
+                basePrice: 39,
+                image: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600',
+                variations: {
+                    color: ['White', 'Black', 'Blue', 'Red'],
+                    size: ['S', 'M', 'L', 'XL']
+                }
+            },
+            // Mugs
+            {
+                id: 'm1',
+                name: 'Custom Photo Mug',
+                category: 'mugs',
+                basePrice: 19,
+                image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=600',
+                variations: {
+                    color: ['White', 'Black', 'Blue'],
+                    type: ['Standard', 'Magic (Color-changing)']
+                }
+            },
+            {
+                id: 'm2',
+                name: 'Premium Ceramic Mug',
+                category: 'mugs',
+                basePrice: 25,
+                image: 'https://images.unsplash.com/photo-1517256673644-36ad11246d21?w=600',
+                variations: {
+                    color: ['White', 'Matte Black'],
+                    size: ['11oz', '15oz']
+                }
+            },
+            {
+                id: 'm3',
+                name: 'Travel Tumbler',
+                category: 'mugs',
+                basePrice: 35,
+                image: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600',
+                variations: {
+                    color: ['Silver', 'Black', 'Blue'],
+                    size: ['16oz', '20oz']
+                }
+            },
+            // Accessories
+            {
+                id: 'a1',
+                name: 'Photo Keychain',
+                category: 'accessories',
+                basePrice: 12,
+                image: 'https://images.unsplash.com/photo-1592838064575-70ed626d3a0e?w=600',
+                variations: {
+                    shape: ['Round', 'Square', 'Heart'],
+                    material: ['Acrylic', 'Metal']
+                }
+            },
+            {
+                id: 'a2',
+                name: 'Custom Phone Case',
+                category: 'accessories',
+                basePrice: 29,
+                image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=600',
+                variations: {
+                    model: ['iPhone 14', 'iPhone 15', 'Samsung S23', 'Samsung S24'],
+                    type: ['Slim', 'Rugged']
+                }
+            },
+            {
+                id: 'a3',
+                name: 'Photo Cushion',
+                category: 'accessories',
+                basePrice: 39,
+                image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600',
+                variations: {
+                    size: ['12x12"', '16x16"', '18x18"'],
+                    material: ['Satin', 'Cotton']
+                }
+            }
+        ];
+
+        let currentCategory = 'all';
+        const itemsGrid = document.getElementById('itemsGrid');
+
+        // Render Items
+        function renderItems(category = 'all') {
+            currentCategory = category;
+            itemsGrid.innerHTML = '';
+
+            const filteredItems = category === 'all' 
+                ? giftItems 
+                : giftItems.filter(item => item.category === category);
+
+            filteredItems.forEach(item => {
+                const card = createItemCard(item);
+                itemsGrid.appendChild(card);
+            });
+        }
+
+        // Create Item Card
+        function createItemCard(item) {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+
+            let variationsHTML = '';
+            for (const [key, values] of Object.entries(item.variations)) {
+                const isColor = key === 'color';
+                variationsHTML += `
+                    <div class="item-variations">
+                        <span class="variation-label">${key.charAt(0).toUpperCase() + key.slice(1)}:</span>
+                        <div class="variation-options" data-variation="${key}">
+                            ${values.map((value, index) => {
+                                if (isColor) {
+                                    const colorMap = {
+                                        'White': '#ffffff',
+                                        'Black': '#000000',
+                                        'Navy': '#001f3f',
+                                        'Gray': '#808080',
+                                        'Brown': '#8B4513',
+                                        'Blue': '#0074D9',
+                                        'Red': '#FF4136',
+                                        'Silver': '#C0C0C0',
+                                        'Gold': '#FFD700',
+                                        'Rose Gold': '#B76E79',
+                                        'Matte Black': '#28282B'
+                                    };
+                                    return `<div class="color-option ${index === 0 ? 'selected' : ''}" 
+                                                 style="background-color: ${colorMap[value] || '#ccc'}" 
+                                                 data-value="${value}"></div>`;
+                                } else {
+                                    return `<div class="variation-option ${index === 0 ? 'selected' : ''}" 
+                                                 data-value="${value}">${value}</div>`;
+                                }
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="item-image">
+                    <img src="${item.image}" alt="${item.name}">
+                </div>
+                <div class="item-info">
+                    <h3>${item.name}</h3>
+                    <div class="item-price">$${item.basePrice}</div>
+                    ${variationsHTML}
+                    <button class="add-to-cart-btn" onclick="addGiftItemToCart('${item.id}', this)">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+            `;
+
+            // Add variation selection handlers
+            card.querySelectorAll('.variation-option, .color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const parent = this.parentElement;
+                    parent.querySelectorAll('.variation-option, .color-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+
+            return card;
+        }
+
+        // Add Gift Item to Cart
+        function addGiftItemToCart(itemId, buttonElement) {
+            const item = giftItems.find(i => i.id === itemId);
+            const card = buttonElement.closest('.item-card');
+            
+            // Get selected variations
+            const selectedVariations = {};
+            card.querySelectorAll('.variation-options').forEach(optionGroup => {
+                const variationType = optionGroup.dataset.variation;
+                const selected = optionGroup.querySelector('.selected');
+                if (selected) {
+                    selectedVariations[variationType] = selected.dataset.value || 
+                        selected.style.backgroundColor;
+                }
+            });
+
+            const cartItem = {
+                id: `${itemId}_${Date.now()}`,
+                name: item.name,
+                price: item.basePrice,
+                image: item.image,
+                type: 'gift-item',
+                variations: selectedVariations,
+                quantity: 1
+            };
+
+            addToCart(cartItem);
+        }
+
+        // Category Navigation
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                renderItems(this.dataset.category);
+            });
+        });
+
+        // Initial render
+        renderItems('all');
+    </script>
+</body>
+</html>

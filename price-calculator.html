@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Calculator - Through My Pencil</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .calculator-hero {
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1554224311-beee4f0d696c?w=1920') center/cover;
+            color: white;
+            text-align: center;
+        }
+
+        .calculator-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .calculator-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .calculator-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .calculator-form {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .calculator-form h2 {
+            margin-bottom: 30px;
+            color: var(--text-dark);
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group select,
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .radio-option label:hover {
+            border-color: var(--primary-color);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .price-summary {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 100px;
+        }
+
+        .price-summary h2 {
+            margin-bottom: 30px;
+            color: var(--text-dark);
+            font-size: 1.8rem;
+        }
+
+        .price-breakdown {
+            margin-bottom: 25px;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .price-item span:first-child {
+            color: var(--text-light);
+        }
+
+        .price-item span:last-child {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .total-price {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-price span:first-child {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .total-price span:last-child {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 15px;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+        }
+
+        .pricing-note {
+            background: rgba(0, 122, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+
+            .price-summary {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">Through My Pencil</div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="giftbox.html">Gift Box</a></li>
+                <li><a href="price-calculator.html" class="active">Price Calculator</a></li>
+                <li><a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a></li>
+                <li><a href="#" class="login-btn" id="loginBtn">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Calculator Hero -->
+    <section class="calculator-hero">
+        <div>
+            <h1>Price Calculator</h1>
+            <p>Calculate your custom portrait price instantly</p>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator-section">
+        <div class="container">
+            <div class="calculator-container">
+                <!-- Calculator Form -->
+                <div class="calculator-form">
+                    <h2>Configure Your Portrait</h2>
+                    
+                    <div class="form-group">
+                        <label>Portrait Size</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="sizeA4" name="size" value="A4" checked>
+                                <label for="sizeA4">A4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="sizeA3" name="size" value="A3">
+                                <label for="sizeA3">A3</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Number of Characters</label>
+                        <select id="characters">
+                            <option value="1">1 Person/Pet</option>
+                            <option value="2">2 People/Pets</option>
+                            <option value="3">3 People/Pets</option>
+                            <option value="4">4 People/Pets</option>
+                            <option value="5">5+ People/Pets</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Frame Option</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="noFrame" name="frame" value="none" checked>
+                                <label for="noFrame">No Frame</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="withFrame" name="frame" value="with">
+                                <label for="withFrame">With Frame</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="frameColorGroup" style="display: none;">
+                        <label>Frame Color</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="blackFrame" name="frameColor" value="black" checked>
+                                <label for="blackFrame">Black</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="whiteFrame" name="frameColor" value="white">
+                                <label for="whiteFrame">White</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delivery Option</label>
+                        <select id="delivery">
+                            <option value="standard">Standard Delivery (7-10 days) - Free</option>
+                            <option value="express">Express Delivery (3-5 days) - $15</option>
+                            <option value="international">International Delivery (10-15 days) - $30</option>
+                        </select>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculatePrice()">
+                        <i class="fas fa-calculator"></i> Calculate Price
+                    </button>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="price-summary">
+                    <h2>Price Summary</h2>
+                    
+                    <div class="price-breakdown" id="priceBreakdown">
+                        <div class="price-item">
+                            <span>Base Price</span>
+                            <span id="basePrice">$80</span>
+                        </div>
+                        <div class="price-item" id="additionalCharges" style="display: none;">
+                            <span>Additional Characters</span>
+                            <span id="charPrice">$0</span>
+                        </div>
+                        <div class="price-item" id="frameCharges" style="display: none;">
+                            <span>Frame</span>
+                            <span id="framePrice">$0</span>
+                        </div>
+                        <div class="price-item">
+                            <span>Delivery</span>
+                            <span id="deliveryPrice">Free</span>
+                        </div>
+                    </div>
+
+                    <div class="total-price">
+                        <span>Total Price</span>
+                        <span id="totalPrice">$80</span>
+                    </div>
+
+                    <button class="order-btn" onclick="orderViaWhatsApp()">
+                        <i class="fab fa-whatsapp"></i>
+                        Order via WhatsApp
+                    </button>
+
+                    <div class="pricing-note">
+                        <strong>Note:</strong> Prices include high-quality pencil portrait with premium paper. Final price may vary based on complexity and special requests.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Through My Pencil</h3>
+                    <p>Transforming memories into timeless art, one portrait at a time.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="custom-order.html">Custom Order</a></li>
+                        <li><a href="giftbox.html">Gift Box</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@throughmypencil.com</li>
+                        <li><i class="fab fa-whatsapp"></i> +1 234 567 890</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Through My Pencil. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Chat Button -->
+    <button class="chat-button" id="chatButton">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Welcome Back</h2>
+            <form id="loginForm" class="auth-form">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p class="toggle-auth">Don't have an account? <a href="#" id="showRegister">Register</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create Account</h2>
+            <form id="registerForm" class="auth-form">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email" required>
+                <input type="tel" placeholder="Phone Number" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <p class="toggle-auth">Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Pricing Configuration
+        const pricing = {
+            basePrice: {
+                A4: 80,
+                A3: 120
+            },
+            additionalCharacter: 40,
+            frame: {
+                none: 0,
+                black: 25,
+                white: 25
+            },
+            delivery: {
+                standard: 0,
+                express: 15,
+                international: 30
+            }
+        };
+
+        // Show/Hide Frame Color Options
+        document.querySelectorAll('input[name="frame"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const frameColorGroup = document.getElementById('frameColorGroup');
+                if (this.value === 'with') {
+                    frameColorGroup.style.display = 'block';
+                } else {
+                    frameColorGroup.style.display = 'none';
+                }
+                calculatePrice();
+            });
+        });
+
+        // Auto-calculate on change
+        document.querySelectorAll('input[name="size"], #characters, #delivery').forEach(element => {
+            element.addEventListener('change', calculatePrice);
+        });
+
+        document.querySelectorAll('input[name="frameColor"]').forEach(radio => {
+            radio.addEventListener('change', calculatePrice);
+        });
+
+        function calculatePrice() {
+            // Get selected values
+            const size = document.querySelector('input[name="size"]:checked').value;
+            const characters = parseInt(document.getElementById('characters').value);
+            const frame = document.querySelector('input[name="frame"]:checked').value;
+            const delivery = document.getElementById('delivery').value;
+
+            // Calculate base price
+            let basePrice = pricing.basePrice[size];
+            
+            // Calculate additional characters
+            let additionalChars = 0;
+            if (characters > 1) {
+                additionalChars = (characters - 1) * pricing.additionalCharacter;
+            }
+
+            // Calculate frame price
+            let framePrice = 0;
+            if (frame === 'with') {
+                const frameColor = document.querySelector('input[name="frameColor"]:checked')?.value || 'black';
+                framePrice = pricing.frame[frameColor];
+            }
+
+            // Calculate delivery price
+            let deliveryPrice = pricing.delivery[delivery];
+
+            // Calculate total
+            let total = basePrice + additionalChars + framePrice + deliveryPrice;
+
+            // Update UI
+            document.getElementById('basePrice').textContent = `$${basePrice}`;
+            
+            const additionalChargesDiv = document.getElementById('additionalCharges');
+            if (additionalChars > 0) {
+                additionalChargesDiv.style.display = 'flex';
+                document.getElementById('charPrice').textContent = `$${additionalChars}`;
+            } else {
+                additionalChargesDiv.style.display = 'none';
+            }
+
+            const frameChargesDiv = document.getElementById('frameCharges');
+            if (framePrice > 0) {
+                frameChargesDiv.style.display = 'flex';
+                document.getElementById('framePrice').textContent = `$${framePrice}`;
+            } else {
+                frameChargesDiv.style.display = 'none';
+            }
+
+            document.getElementById('deliveryPrice').textContent = deliveryPrice > 0 ? `$${deliveryPrice}` : 'Free';
+            document.getElementById('totalPrice').textContent = `$${total}`;
+
+            // Store for WhatsApp message
+            window.currentOrder = {
+                size,
+                characters,
+                frame,
+                delivery,
+                total
+            };
+        }
+
+        function orderViaWhatsApp() {
+            const order = window.currentOrder || {};
+            const message = `Hi! I want to order a portrait with these details:
+- Size: ${order.size}
+- Characters: ${order.characters}
+- Frame: ${order.frame === 'with' ? 'Yes' : 'No'}
+- Delivery: ${order.delivery}
+- Total Price: $${order.total}`;
+
+            const whatsappUrl = `https://wa.me/1234567890?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Initialize price on load
+        calculatePrice();
+    </script>
+</body>
+</html>
